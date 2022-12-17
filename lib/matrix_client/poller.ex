@@ -27,8 +27,8 @@ defmodule M51.MatrixClient.Poller do
   #  - After that, min delay is added, multiplied by factor on every fail, up to max.
   #  - When connection succeeds, delay is reset.
   # min/max delays are set in milliseconds here.
-  @connect_delay_min 1_000
-  @connect_delay_max 60_000
+  @connect_delay_min 5_000
+  @connect_delay_max 7200_000
   @connect_delay_factor 1.6
 
   def start_link(args) do
@@ -1285,7 +1285,7 @@ defmodule M51.MatrixClient.Poller do
 
       # note for later: if we ever implement prefixes, make sure to add them
       # *after* calling nick2nuh; we don't want to have prefixes in the username part.
-      M51.MatrixClient.State.room_members(state, room_id)
+      []
       |> Enum.map(fn {user_id, _member} ->
         nuh = nick2nuh(user_id)
         # M51.Irc.Command does not escape " " in trailing
