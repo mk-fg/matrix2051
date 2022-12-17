@@ -48,6 +48,6 @@ defmodule M51.Config do
   end
 
   def port() do
-    2051
+    6665
   end
 end
