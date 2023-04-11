@@ -103,9 +103,14 @@ defmodule M51.MatrixClient.Poller do
         handle_events(sup_pid, is_backlog, events)
         events["next_batch"]
 
+      {:error, code, _} when code == 504 ->
+        # seem to be a normal thing in random servers' configuration
+        # probably no one bothered to configure reverse-proxy to avoid reconnects
+        poll_one(sup_pid, since, raw_client)
+
       {:error, code, _} when code >= 500 and code < 600 ->
         # server request processing error, try again
-        poll_one(sup_pid, since, raw_client, delay, "http-server-error")
+        poll_one(sup_pid, since, raw_client, delay, "http-err=#{code}")
 
       {:error, nil, reason} ->
         # network connection failure, try again
